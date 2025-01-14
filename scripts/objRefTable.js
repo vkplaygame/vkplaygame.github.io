@@ -5,6 +5,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Touch,
 		C3.Plugins.Sprite,
 		C3.Behaviors.Sin,
+		C3.Plugins.Text,
 		C3.Plugins.System.Cnds.IsGroupActive,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.System.Cnds.EveryTick,
@@ -38,6 +39,8 @@ self.C3_JsPropNameTable = [
 	{image2: 0},
 	{image3: 0},
 	{image4: 0},
+	{PrivacyCvetnoiBoom: 0},
+	{PrivacyDolina: 0},
 	{Buttons: 0}
 ];
 
@@ -59,5 +62,7 @@ self.InstanceType = {
 	image2: class extends self.ISpriteInstance {},
 	image3: class extends self.ISpriteInstance {},
 	image4: class extends self.ISpriteInstance {},
+	PrivacyCvetnoiBoom: class extends self.ITextInstance {},
+	PrivacyDolina: class extends self.ITextInstance {},
 	Buttons: class extends self.ISpriteInstance {}
 }
