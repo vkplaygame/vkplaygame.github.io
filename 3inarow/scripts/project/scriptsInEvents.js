@@ -39,7 +39,7 @@ const scriptsInEvents = {
 		}
 	},
 
-	async Emenu_Event1_Act9(runtime, localVars)
+	async Emenu_Event2_Act1(runtime, localVars)
 	{
 		// Попробуем инициировать и показать баннер
 		try {
