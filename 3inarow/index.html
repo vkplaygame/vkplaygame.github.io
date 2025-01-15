@@ -1,8 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://cdn.tmads.xyz/tmadsSdk.js"></script>
+<script>
+  // Инициализация TMADS SDK с тестовым режимом
+  document.addEventListener('DOMContentLoaded', function() {
+    var tmadsSdkScript = document.createElement('script');
+    tmadsSdkScript.src = "https://cdn.tmads.xyz/tmadsSdk.js";
+    
+    tmadsSdkScript.onload = function() {
+      // Установка тестового режима
+      TMAds.setDebugMode(true);
 
+      // Инициализация SDK с вашим appkey
+      TMAds.init({
+        appKey: "622548a8faf2006904215d24894a9fbc", // Ваш appkey
+      });
+
+      // Пример вызова показа рекламы
+      TMAds.showAd();
+    };
+
+    // Добавляем скрипт на страницу
+    document.head.appendChild(tmadsSdkScript);
+  });
+</script>
     <meta charset="UTF-8">
 	<title>3inarow</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">

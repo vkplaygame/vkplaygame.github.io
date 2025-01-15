@@ -28,15 +28,8 @@ const scriptsInEvents = {
 	async Emenu_Event2_Act1(runtime, localVars)
 	{
 		// Проверка предварительной загрузки интерстициальной рекламы TMAds
-		tmadsSdk.checkInterstitialAd()
-		  .then(() => {
-		    // Интерактивная реклама предварительно загружена, показываем её
-		    tmadsSdk.show('interstitial');
-		  })
-		  .catch(() => {
-		    // Ошибка предварительной загрузки рекламы
-		    console.error("Не удалось предварительно загрузить интерстициальную рекламу (нет заполнения, проблемы с сетью и т.д.)");
-		  });
+		tmadsSdk.checkInterstitialAd();
+		  
 	},
 
 	async Emenu_Event2_Act3(runtime, localVars)
