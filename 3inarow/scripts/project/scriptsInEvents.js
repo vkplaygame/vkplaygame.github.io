@@ -4,11 +4,12 @@ script.src = "https://cdn.tmads.xyz/tmadsSdk.js";
 script.onload = function() {
     // Инициализация SDK после его загрузки
     if (typeof tmadsSdk !== 'undefined') {
-        tmadsSdk.init({
-            // Здесь вы можете указать параметры инициализации, если они необходимы
-            apiKey: '622548a8faf2006904215d24894a9fbc' // Замените 'ваш_ключ_здесь' на ваш реальный ключ приложения
-        });
+        tmadsSdk.setDebugMode(true); // Включение режима отладки
+        tmadsSdk.init('622548a8faf2006904215d24894a9fbc'); // Ваш API ключ
         console.log("SDK успешно инициализирован");
+
+        // Показ рекламы после инициализации, например внизу экрана
+        
     } else {
         console.error("Не удалось загрузить SDK");
     }
@@ -20,29 +21,27 @@ const scriptsInEvents = {
 
 	async Emenu_Event1_Act9(runtime, localVars)
 	{
-		TMAds.checkInterstitialAd()
-		  .then(()=>{
-		    //interstitial ad preloaded
-		  })
-		  .catch(()=>{
-		    //interstitial ad failed to preload (no fill, network issues etc)
-		  });
+		TMAds.init('string 622548a8faf2006904215d24894a9fbc');
+		
 	},
 
 	async Emenu_Event2_Act1(runtime, localVars)
 	{
-		tmadsSdk.show('bottom');
+		// Проверка предварительной загрузки интерстициальной рекламы TMAds
+		tmadsSdk.checkInterstitialAd()
+		  .then(() => {
+		    // Интерактивная реклама предварительно загружена, показываем её
+		    tmadsSdk.show('interstitial');
+		  })
+		  .catch(() => {
+		    // Ошибка предварительной загрузки рекламы
+		    console.error("Не удалось предварительно загрузить интерстициальную рекламу (нет заполнения, проблемы с сетью и т.д.)");
+		  });
 	},
 
-	async Emenu_Event2_Act2(runtime, localVars)
+	async Emenu_Event2_Act3(runtime, localVars)
 	{
-		TMAds.showInterstitialAd()
-		  .then(()=>{
-		    //interstitial ad has been successfully shown and closed
-		  })
-		  .catch(()=>{
-		    //interstitial ad failed to show (likely due to the network issues)
-		  });
+		tmadsSdk.show('interstitial');
 	}
 
 };
