@@ -8,7 +8,7 @@ const scriptsInEvents = {
 		// Попробуем инициировать и показать баннер
 		try {
 		    // Инициализация Adsgram и показ баннера
-		    await window.Adsgram.init({ blockId: "int-7201" }).show();
+		    await window.Adsgram.init({ blockId: "int-7215" }).show();
 		} catch (error) {
 		    // Обработка ошибок: ничего не делаем или выполняем другие действия
 		    console.error("Ошибка при показе рекламы:", error);
@@ -20,7 +20,7 @@ const scriptsInEvents = {
 		// Попробуем инициировать и показать баннер
 		try {
 		    // Инициализация Adsgram и показ баннера
-		    await window.Adsgram.init({ blockId: "int-7201" }).show();
+		    await window.Adsgram.init({ blockId: "int-7215" }).show();
 		} catch (error) {
 		    // Обработка ошибок: ничего не делаем или выполняем другие действия
 		    console.error("Ошибка при показе рекламы:", error);
