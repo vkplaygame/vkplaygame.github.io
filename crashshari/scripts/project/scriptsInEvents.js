@@ -16,12 +16,12 @@ script.onload = function() {
 
 const scriptsInEvents = {
 
-	async EventGame_Event52_Act2(runtime, localVars)
+	async EventGame_Event52_Act1(runtime, localVars)
 	{
 		window.Sonar.show({ adUnit: "reward" });
 	},
 
-	async EventGame_Event61_Act11(runtime, localVars)
+	async EventGame_Event60_Act11(runtime, localVars)
 	{
 		window.Sonar.show({ adUnit: "interstitial" });
 	},
