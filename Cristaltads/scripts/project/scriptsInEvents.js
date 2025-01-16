@@ -51,7 +51,7 @@ const scriptsInEvents = {
 	{
 		// Вставьте div для рекламы
 		const adContainer = document.createElement('div');
-		adContainer.id = 'tads-container-308'; // Замените YOUR_WIDGET_ID на ваш ID
+		adContainer.id = 'tads-container-309'; // Замените YOUR_WIDGET_ID на ваш ID
 		document.body.appendChild(adContainer);
 	},
 
@@ -81,7 +81,7 @@ const scriptsInEvents = {
 		    };
 		
 		    // Init widget by Widget ID
-		    initTadsWidget('308', true, onShowRewardCallback, onClickRewardCallback, onAdsNotFound);
+		    initTadsWidget('309', true, onShowRewardCallback, onClickRewardCallback, onAdsNotFound);
 		});
 	}
 
