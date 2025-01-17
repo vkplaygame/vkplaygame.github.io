@@ -130,7 +130,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Eponesh_GameScore.Acts.GameStart,
 		C3.ScriptsInEvents.Emenu_Event1_Act9,
 		C3.Plugins.Button.Acts.SetPos,
-		C3.Plugins.Button.Cnds.OnClicked,
 		C3.ScriptsInEvents.Emenu_Event2_Act1,
 		C3.ScriptsInEvents.Emenu_Event3_Act1,
 		C3.Plugins.Browser.Acts.GoToURLWindow,
@@ -262,6 +261,8 @@ self.C3_JsPropNameTable = [
 	{linia: 0},
 	{Textspitefont2: 0},
 	{textBoom: 0},
+	{Спрайт2бан: 0},
+	{Спрайт2Вид: 0},
 	{Buttons: 0},
 	{bestscore: 0},
 	{score: 0},
@@ -417,5 +418,7 @@ self.InstanceType = {
 	linia: class extends self.ISpriteInstance {},
 	Textspitefont2: class extends self.ISpriteFontInstance {},
 	textBoom: class extends self.ISpriteInstance {},
+	Спрайт2бан: class extends self.ISpriteInstance {},
+	Спрайт2Вид: class extends self.ISpriteInstance {},
 	Buttons: class extends self.ISpriteInstance {}
 }
