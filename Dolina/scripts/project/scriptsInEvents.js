@@ -36,7 +36,7 @@ const scriptsInEvents = {
 		window.Sonar.show({ adUnit: "interstitial" });
 	},
 
-	async Emenu_Event1_Act9(runtime, localVars)
+	async Emenu_Event1_Act11(runtime, localVars)
 	{
 		// Код для показа баннерной рекламы внизу
 		if (window.Sonar) {
