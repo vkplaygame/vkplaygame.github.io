@@ -87,6 +87,34 @@ const scriptsInEvents = {
 		const div = document.createElement('div');
 		   div.id = 'tads-container-308'; // Замените на ваш идентификатор
 		   document.body.appendChild(div);
+	},
+
+	async Emenu_Event2_Act2(runtime, localVars)
+	{
+		const initTadsWidget = (id, debug, onShowReward, onClickReward, onAdsNotFound) => {
+		    const adController = window.tads.init({ widgetId: id, debug: debug, onShowReward, onClickReward, onAdsNotFound });
+		    adController.loadAd()
+		        .then(() => adController.showAd())
+		        .catch((result) => {
+		            console.log(result);
+		        });
+		};
+		
+		// Callbacks
+		const onShowRewardCallback = (result) => {
+		    console.log('Показать рекламу, вознаградить пользователя:', result);
+		};
+		
+		const onClickRewardCallback = (result) => {
+		    console.log('Клик по рекламе, вознаградить пользователя:', result);
+		};
+		
+		const onAdsNotFound = () => {
+		    console.log('Функция обратного вызова, если реклама не найдена для показа');
+		};
+		
+		// Инициализация виджета по ID виджета
+		initTadsWidget('308', true, onShowRewardCallback, onClickRewardCallback, onAdsNotFound);
 	}
 
 };
