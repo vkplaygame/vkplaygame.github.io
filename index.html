@@ -1,76 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-	<script src="https://telegram.org/js/telegram-web-app.js"></script>
-	<script src="https://w.tads.me/widget.js"></script>
-	<script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рекламный виджет</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://w.tads.me/widget.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #tads-container {
+            margin-top: 20px;
+            height: 300px; /* Укажите высоту для виджета */
+            border: 1px solid #ccc;
+            background-color: white;
+            display: none; /* Скрываем контейнер до его инициализации */
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Добро пожаловать на наш сайт!</h1>
+<p>Нажмите кнопку ниже, чтобы показать рекламу.</p>
+<button id="show-ad-button">Показать рекламу</button>
+
+<div id="tads-container-308"></div>
+
+<script>
+    // Инициализация виджета
     document.addEventListener("DOMContentLoaded", function() {
         const initTadsWidget = (id, debug, onShowReward, onClickReward, onAdsNotFound) => {
             const adController = window.tads.init({ widgetId: id, debug: debug, onShowReward, onClickReward, onAdsNotFound });
             adController.loadAd()
-                .then(() => adController.showAd())
-                .catch((result) => {
-                    console.log(result);
+                .then(() => {
+                    document.getElementById('tads-container-308').style.display = "block"; // Показываем контейнер
+                    return adController.showAd();
+                })
+                .catch(error => {
+                    console.error("Ошибка загрузки рекламы:", error);
                 });
         };
 
-        // Callbacks
-        const onShowRewardCallback = (result) => {
-            console.log('Show ads, reward user:', result);
-        };
-
-        const onClickRewardCallback = (result) => {
-            console.log('Click on ad, reward user:', result);
-        };
-
-        const onAdsNotFound = () => {
-            console.log('Callback which calls if no ads found to show',);
-        }
-
-        // Init widget by Widget ID
-        initTadsWidget('308', true, onShowRewardCallback, onClickRewardCallback, onAdsNotFound);
+        document.getElementById('show-ad-button').addEventListener('click', function() {
+            initTadsWidget(308, false, null, null, function() {
+                alert("Реклама не найдена.");
+            });
+        });
     });
 </script>
-    <meta charset="UTF-8">
-	<title>Tap To Play</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-	
-	<!-- Made with Construct, the game and app creator :: https://www.construct.net -->
-	<meta name="generator" content="Scirra Construct">
 
-	<meta name="description" content="Tap To Play">
-
-	<link rel="manifest" href="appmanifest.json">
-
-
-	<link rel="stylesheet" href="style.css">
-
-
-
-</head> 
- 
-<body>
-
-	
-
-<script>
-if (location.protocol.substr(0, 4) === "file")
-{
-	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
-}
-</script>
-	
-	<noscript>
-		<div id="notSupportedWrap">
-			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
-			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
-		</div>
-	</noscript>
-	<script src="scripts/modernjscheck.js"></script>
-	<script src="scripts/supportcheck.js"></script>
-	<script src="scripts/offlineclient.js" type="module"></script>
-	<script src="scripts/main.js" type="module"></script>
-	<script src="scripts/register-sw.js" type="module"></script>
-
-</body> 
+</body>
 </html>
