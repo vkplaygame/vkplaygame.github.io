@@ -100,6 +100,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Cnds.PickRandom,
 		C3.Plugins.Sprite.Exps.IID,
 		C3.Plugins.System.Cnds.PickOverlappingPoint,
+		C3.Plugins.Browser.Acts.GoToURL,
 		C3.Plugins.Browser.Acts.GoToURLWindow
 	];
 };

@@ -1639,11 +1639,14 @@ self.C3_ExpressionFuncs = [
 			return () => ((C3.distanceTo(n0.ExpObject_InstExpr(n1.ExpInstVar()), n2.ExpObject_InstExpr(n3.ExpInstVar()), n4.ExpInstVar(), n5.ExpInstVar()) / 2) / 3);
 		},
 		() => "Add",
+		() => "https://t.me/share/url?url=https://t.me/DolinaCristallov_bot/Kristall&text=",
+		() => "More",
+		() => "https://vk.com/club224223074",
+		() => "Tap to Play",
 		() => "https://gamedistribution.com/games/angry-checkers",
 		() => "Angry Checkers",
 		() => "Buy",
 		() => "https://www.scirra.com/store/licenseable-games/angry-checkers-multiplayer-2405",
-		() => "More",
 		() => "https://gamedistribution.com/games?company=Independent%20Developer",
 		() => "Paradine Games"
 ];
