@@ -11,13 +11,6 @@
     <!-- Telegram scripts -->
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
-    <script>
-        window.TelegramAdsController = new TelegramAdsController();
-        window.TelegramAdsController.initialize({
-            pubId: "958913",
-            appId: "1350",
-        });
-    </script>
 </head>
 <body>
     <script>
@@ -43,5 +36,16 @@
     <div id="telegram-banner" style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000;">
         <!-- Баннер будет вставлен сюда -->
     </div>
+
+    <script>
+        // Задержка показа рекламы на 3 секунды
+        setTimeout(() => {
+            window.TelegramAdsController = new TelegramAdsController();
+            window.TelegramAdsController.initialize({
+                pubId: "958913",
+                appId: "1350",
+            });
+        }, 3000); // 3000 миллисекунд = 3 секунды
+    </script>
 </body>
 </html>
