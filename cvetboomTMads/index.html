@@ -70,11 +70,15 @@
         // Функция для загрузки видео рекламы
         async function loadVideoAd() {
             try {
-                // Проверяем доступность рекламы
+                updateStatus('Загрузка видео рекламы...');
+                // Загружаем рекламу в кеш
                 await TMAds.checkRewardedAd();
-                // Добавляем в очередь
-                videoQueue.push(true);
-                updateStatus(`Видео реклама добавлена в очередь. Всего пакетов: ${videoQueue.length}`);
+                // Добавляем в очередь после успешной загрузки
+                videoQueue.push({
+                    type: 'video',
+                    loaded: true
+                });
+                updateStatus(`Видео реклама загружена и добавлена в очередь. Всего пакетов: ${videoQueue.length}`);
             } catch (error) {
                 updateStatus('Ошибка загрузки видео рекламы');
             }
@@ -83,11 +87,15 @@
         // Функция для загрузки фулскрин рекламы
         async function loadFullscreenAd() {
             try {
-                // Проверяем доступность рекламы
+                updateStatus('Загрузка фулскрин рекламы...');
+                // Загружаем рекламу в кеш
                 await TMAds.checkInterstitialAd();
-                // Добавляем в очередь
-                fullscreenQueue.push(true);
-                updateStatus(`Фулскрин реклама добавлена в очередь. Всего пакетов: ${fullscreenQueue.length}`);
+                // Добавляем в очередь после успешной загрузки
+                fullscreenQueue.push({
+                    type: 'fullscreen',
+                    loaded: true
+                });
+                updateStatus(`Фулскрин реклама загружена и добавлена в очередь. Всего пакетов: ${fullscreenQueue.length}`);
             } catch (error) {
                 updateStatus('Ошибка загрузки фулскрин рекламы');
             }
@@ -99,7 +107,15 @@
             
             isPlaying = true;
             try {
-                // Показываем рекламу
+                // Берем первый пакет из очереди
+                const adPackage = videoQueue[0];
+                if (!adPackage.loaded) {
+                    updateStatus('Реклама еще не загружена');
+                    return;
+                }
+
+                updateStatus('Воспроизведение видео рекламы...');
+                // Показываем загруженную рекламу
                 await TMAds.showRewardedAd();
                 // Удаляем показанный пакет из очереди
                 videoQueue.shift();
@@ -122,7 +138,15 @@
             
             isPlaying = true;
             try {
-                // Показываем рекламу
+                // Берем первый пакет из очереди
+                const adPackage = fullscreenQueue[0];
+                if (!adPackage.loaded) {
+                    updateStatus('Реклама еще не загружена');
+                    return;
+                }
+
+                updateStatus('Воспроизведение фулскрин рекламы...');
+                // Показываем загруженную рекламу
                 await TMAds.showInterstitialAd();
                 // Удаляем показанный пакет из очереди
                 fullscreenQueue.shift();
@@ -155,6 +179,15 @@
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.expand();
             }
+        });
+
+        // Добавляем колбэки для отслеживания загрузки
+        TMAds.addCallback("onRewardedAdLoadSuccess", () => {
+            updateStatus('Видео реклама успешно загружена в кеш');
+        });
+
+        TMAds.addCallback("onInterstitialAdLoadSuccess", () => {
+            updateStatus('Фулскрин реклама успешно загружена в кеш');
         });
     </script>
 </body>
