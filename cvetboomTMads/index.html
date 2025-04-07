@@ -70,22 +70,26 @@
         // Функция для загрузки видео рекламы
         async function loadVideoAd() {
             try {
-                // Просто добавляем в очередь метку времени
-                videoQueue.push(Date.now());
+                // Проверяем доступность рекламы
+                await TMAds.checkRewardedAd();
+                // Добавляем в очередь
+                videoQueue.push(true);
                 updateStatus(`Видео реклама добавлена в очередь. Всего пакетов: ${videoQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка добавления видео рекламы');
+                updateStatus('Ошибка загрузки видео рекламы');
             }
         }
 
         // Функция для загрузки фулскрин рекламы
         async function loadFullscreenAd() {
             try {
-                // Просто добавляем в очередь метку времени
-                fullscreenQueue.push(Date.now());
+                // Проверяем доступность рекламы
+                await TMAds.checkInterstitialAd();
+                // Добавляем в очередь
+                fullscreenQueue.push(true);
                 updateStatus(`Фулскрин реклама добавлена в очередь. Всего пакетов: ${fullscreenQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка добавления фулскрин рекламы');
+                updateStatus('Ошибка загрузки фулскрин рекламы');
             }
         }
 
@@ -95,8 +99,6 @@
             
             isPlaying = true;
             try {
-                // Проверяем доступность рекламы
-                await TMAds.checkRewardedAd();
                 // Показываем рекламу
                 await TMAds.showRewardedAd();
                 // Удаляем показанный пакет из очереди
@@ -120,8 +122,6 @@
             
             isPlaying = true;
             try {
-                // Проверяем доступность рекламы
-                await TMAds.checkInterstitialAd();
                 // Показываем рекламу
                 await TMAds.showInterstitialAd();
                 // Удаляем показанный пакет из очереди
