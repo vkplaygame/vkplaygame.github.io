@@ -1,194 +1,48 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMAds Video Manager</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tmads.xyz/tmadsSdk.js"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-        }
-        .button-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: var(--tg-theme-button-color, #3390ec);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            font-size: 16px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        button:active {
-            opacity: 0.8;
-        }
-        .status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            color: var(--tg-theme-text-color, #000000);
-        }
-    </style>
-</head>
+	<title>Цветной бум</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	
+	<!-- Made with Construct, the game and app creator :: https://www.construct.net -->
+	<meta name="generator" content="Scirra Construct">
+
+	<meta name="description" content="3 в ряд">
+
+	<link rel="manifest" href="appmanifest.json">
+	<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
+	<link rel="apple-touch-icon" sizes="256x256" href="icons/icon-256.png">
+	<link rel="icon" type="image/png" href="icons/icon-256.png">
+
+	<link rel="stylesheet" href="style.css">
+
+
+
+</head> 
+ 
 <body>
-    <div class="button-container">
-        <button id="loadVideo">Загрузить видео</button>
-        <button id="loadFullscreen">Загрузить фулскрин</button>
-        <button id="playVideo">Показать видео</button>
-        <button id="playFullscreen">Показать фулскрин</button>
-    </div>
-    <div id="status" class="status">Готов к работе</div>
 
-    <script>
-        let videoQueue = [];
-        let fullscreenQueue = [];
-        let isPlaying = false;
+	
 
-        // Включаем режим отладки
-        TMAds.setDebugMode(false);
+<script>
+if (location.protocol.substr(0, 4) === "file")
+{
+	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
+}
+</script>
+	
+	<noscript>
+		<div id="notSupportedWrap">
+			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
+			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
+		</div>
+	</noscript>
+	<script src="scripts/modernjscheck.js"></script>
+	<script src="scripts/supportcheck.js"></script>
+	<script src="scripts/offlineclient.js" type="module"></script>
+	<script src="scripts/main.js" type="module"></script>
+	<script src="scripts/register-sw.js" type="module"></script>
 
-        // Инициализация TMAds
-        TMAds.init('58889f9372274a220f33f68777fd0a3d');
-
-        // Функция для обновления статуса
-        function updateStatus(message) {
-            document.getElementById('status').textContent = message;
-        }
-
-        // Функция для загрузки видео рекламы
-        async function loadVideoAd() {
-            try {
-                updateStatus('Загрузка видео рекламы...');
-                // Загружаем рекламу в кеш
-                await TMAds.checkRewardedAd();
-                // Добавляем в очередь после успешной загрузки
-                videoQueue.push({
-                    type: 'video',
-                    loaded: true
-                });
-                updateStatus(`Видео реклама загружена и добавлена в очередь. Всего пакетов: ${videoQueue.length}`);
-            } catch (error) {
-                updateStatus('Ошибка загрузки видео рекламы');
-            }
-        }
-
-        // Функция для загрузки фулскрин рекламы
-        async function loadFullscreenAd() {
-            try {
-                updateStatus('Загрузка фулскрин рекламы...');
-                // Загружаем рекламу в кеш
-                await TMAds.checkInterstitialAd();
-                // Добавляем в очередь после успешной загрузки
-                fullscreenQueue.push({
-                    type: 'fullscreen',
-                    loaded: true
-                });
-                updateStatus(`Фулскрин реклама загружена и добавлена в очередь. Всего пакетов: ${fullscreenQueue.length}`);
-            } catch (error) {
-                updateStatus('Ошибка загрузки фулскрин рекламы');
-            }
-        }
-
-        // Функция для воспроизведения видео рекламы
-        async function playNextVideo() {
-            if (isPlaying || videoQueue.length === 0) return;
-            
-            isPlaying = true;
-            try {
-                // Берем первый пакет из очереди
-                const adPackage = videoQueue[0];
-                if (!adPackage.loaded) {
-                    updateStatus('Реклама еще не загружена');
-                    return;
-                }
-
-                updateStatus('Воспроизведение видео рекламы...');
-                // Показываем загруженную рекламу
-                await TMAds.showRewardedAd();
-                // Удаляем показанный пакет из очереди
-                videoQueue.shift();
-                updateStatus(`Видео показано. Осталось пакетов: ${videoQueue.length}`);
-                
-                isPlaying = false;
-                // Если в очереди еще есть пакеты, запускаем следующий
-                if (videoQueue.length > 0) {
-                    setTimeout(playNextVideo, 1000);
-                }
-            } catch (error) {
-                isPlaying = false;
-                updateStatus('Ошибка показа видео рекламы');
-            }
-        }
-
-        // Функция для воспроизведения фулскрин рекламы
-        async function playNextFullscreen() {
-            if (isPlaying || fullscreenQueue.length === 0) return;
-            
-            isPlaying = true;
-            try {
-                // Берем первый пакет из очереди
-                const adPackage = fullscreenQueue[0];
-                if (!adPackage.loaded) {
-                    updateStatus('Реклама еще не загружена');
-                    return;
-                }
-
-                updateStatus('Воспроизведение фулскрин рекламы...');
-                // Показываем загруженную рекламу
-                await TMAds.showInterstitialAd();
-                // Удаляем показанный пакет из очереди
-                fullscreenQueue.shift();
-                updateStatus(`Фулскрин показан. Осталось пакетов: ${fullscreenQueue.length}`);
-                
-                isPlaying = false;
-                // Если в очереди еще есть пакеты, запускаем следующий
-                if (fullscreenQueue.length > 0) {
-                    setTimeout(playNextFullscreen, 1000);
-                }
-            } catch (error) {
-                isPlaying = false;
-                updateStatus('Ошибка показа фулскрин рекламы');
-            }
-        }
-
-        // Обработчики событий для кнопок
-        document.getElementById('loadVideo').addEventListener('click', loadVideoAd);
-        document.getElementById('loadFullscreen').addEventListener('click', loadFullscreenAd);
-        document.getElementById('playVideo').addEventListener('click', playNextVideo);
-        document.getElementById('playFullscreen').addEventListener('click', playNextFullscreen);
-
-        // Добавляем колбэки для отслеживания успешного просмотра
-        TMAds.addCallback("onRewardedAdShowSuccess", () => {
-            updateStatus('Видео реклама успешно просмотрена');
-        });
-
-        TMAds.addCallback("onInterstitialAdShowSuccess", () => {
-            updateStatus('Фулскрин реклама успешно просмотрена');
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand();
-            }
-        });
-
-        // Добавляем колбэки для отслеживания загрузки
-        TMAds.addCallback("onRewardedAdLoadSuccess", () => {
-            updateStatus('Видео реклама успешно загружена в кеш');
-        });
-
-        TMAds.addCallback("onInterstitialAdLoadSuccess", () => {
-            updateStatus('Фулскрин реклама успешно загружена в кеш');
-        });
-    </script>
-</body>
-</html> 
+</body> 
+</html>
