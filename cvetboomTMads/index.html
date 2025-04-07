@@ -70,26 +70,22 @@
         // Функция для загрузки видео рекламы
         async function loadVideoAd() {
             try {
-                // Запрашиваем пакет рекламы
-                const adPackage = await TMAds.checkRewardedAd();
-                // Сохраняем пакет в очередь
-                videoQueue.push(adPackage);
-                updateStatus(`Видео реклама загружена и сохранена. Всего пакетов: ${videoQueue.length}`);
+                // Просто добавляем в очередь метку времени
+                videoQueue.push(Date.now());
+                updateStatus(`Видео реклама добавлена в очередь. Всего пакетов: ${videoQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка загрузки видео рекламы');
+                updateStatus('Ошибка добавления видео рекламы');
             }
         }
 
         // Функция для загрузки фулскрин рекламы
         async function loadFullscreenAd() {
             try {
-                // Запрашиваем пакет рекламы
-                const adPackage = await TMAds.checkInterstitialAd();
-                // Сохраняем пакет в очередь
-                fullscreenQueue.push(adPackage);
-                updateStatus(`Фулскрин реклама загружена и сохранена. Всего пакетов: ${fullscreenQueue.length}`);
+                // Просто добавляем в очередь метку времени
+                fullscreenQueue.push(Date.now());
+                updateStatus(`Фулскрин реклама добавлена в очередь. Всего пакетов: ${fullscreenQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка загрузки фулскрин рекламы');
+                updateStatus('Ошибка добавления фулскрин рекламы');
             }
         }
 
@@ -99,9 +95,9 @@
             
             isPlaying = true;
             try {
-                // Берем первый пакет из очереди
-                const adPackage = videoQueue[0];
-                // Показываем рекламу из пакета
+                // Проверяем доступность рекламы
+                await TMAds.checkRewardedAd();
+                // Показываем рекламу
                 await TMAds.showRewardedAd();
                 // Удаляем показанный пакет из очереди
                 videoQueue.shift();
@@ -124,9 +120,9 @@
             
             isPlaying = true;
             try {
-                // Берем первый пакет из очереди
-                const adPackage = fullscreenQueue[0];
-                // Показываем рекламу из пакета
+                // Проверяем доступность рекламы
+                await TMAds.checkInterstitialAd();
+                // Показываем рекламу
                 await TMAds.showInterstitialAd();
                 // Удаляем показанный пакет из очереди
                 fullscreenQueue.shift();
