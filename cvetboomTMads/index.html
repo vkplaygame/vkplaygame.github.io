@@ -1,48 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-	<title>Цветной бум</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-	
-	<!-- Made with Construct, the game and app creator :: https://www.construct.net -->
-	<meta name="generator" content="Scirra Construct">
-
-	<meta name="description" content="3 в ряд">
-
-	<link rel="manifest" href="appmanifest.json">
-	<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
-	<link rel="apple-touch-icon" sizes="256x256" href="icons/icon-256.png">
-	<link rel="icon" type="image/png" href="icons/icon-256.png">
-
-	<link rel="stylesheet" href="style.css">
-
-
-
-</head> 
- 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMAds Video Manager</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tmads.xyz/tmadsSdk.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        button:active {
+            opacity: 0.8;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            color: var(--tg-theme-text-color, #000000);
+        }
+    </style>
+</head>
 <body>
+    <div class="button-container">
+        <button id="loadVideo">Загрузить видео</button>
+        <button id="loadFullscreen">Загрузить фулскрин</button>
+        <button id="playVideo">Показать видео</button>
+        <button id="playFullscreen">Показать фулскрин</button>
+    </div>
+    <div id="status" class="status">Готов к работе</div>
 
-	
+    <script>
+        let videoQueue = [];
+        let fullscreenQueue = [];
+        let isPlaying = false;
 
-<script>
-if (location.protocol.substr(0, 4) === "file")
-{
-	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
-}
-</script>
-	
-	<noscript>
-		<div id="notSupportedWrap">
-			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
-			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
-		</div>
-	</noscript>
-	<script src="scripts/modernjscheck.js"></script>
-	<script src="scripts/supportcheck.js"></script>
-	<script src="scripts/offlineclient.js" type="module"></script>
-	<script src="scripts/main.js" type="module"></script>
-	<script src="scripts/register-sw.js" type="module"></script>
+        // Инициализация TMAds
+        TMAds.init('58889f9372274a220f33f68777fd0a3d');
 
-</body> 
-</html>
+        // Функция для обновления статуса
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Функция для загрузки видео рекламы
+        async function loadVideoAd() {
+            try {
+                await TMAds.checkRewardedAd();
+                videoQueue.push(Date.now()); // Сохраняем метку времени как идентификатор
+                updateStatus(`Видео реклама загружена. В очереди: ${videoQueue.length}`);
+            } catch (error) {
+                updateStatus('Ошибка загрузки видео рекламы');
+            }
+        }
+
+        // Функция для загрузки фулскрин рекламы
+        async function loadFullscreenAd() {
+            try {
+                await TMAds.checkInterstitialAd();
+                fullscreenQueue.push(Date.now()); // Сохраняем метку времени как идентификатор
+                updateStatus(`Фулскрин реклама загружена. В очереди: ${fullscreenQueue.length}`);
+            } catch (error) {
+                updateStatus('Ошибка загрузки фулскрин рекламы');
+            }
+        }
+
+        // Функция для воспроизведения видео рекламы
+        async function playNextVideo() {
+            if (isPlaying || videoQueue.length === 0) return;
+            
+            isPlaying = true;
+            try {
+                await TMAds.showRewardedAd();
+                videoQueue.shift(); // Удаляем показанное видео из очереди
+                updateStatus(`Видео показано. Осталось в очереди: ${videoQueue.length}`);
+                
+                isPlaying = false;
+                if (videoQueue.length > 0) {
+                    await loadVideoAd(); // Предзагружаем следующее видео
+                }
+            } catch (error) {
+                isPlaying = false;
+                updateStatus('Ошибка показа видео рекламы');
+            }
+        }
+
+        // Функция для воспроизведения фулскрин рекламы
+        async function playNextFullscreen() {
+            if (isPlaying || fullscreenQueue.length === 0) return;
+            
+            isPlaying = true;
+            try {
+                await TMAds.showInterstitialAd();
+                fullscreenQueue.shift(); // Удаляем показанную рекламу из очереди
+                updateStatus(`Фулскрин показан. Осталось в очереди: ${fullscreenQueue.length}`);
+                
+                isPlaying = false;
+                if (fullscreenQueue.length > 0) {
+                    await loadFullscreenAd(); // Предзагружаем следующую рекламу
+                }
+            } catch (error) {
+                isPlaying = false;
+                updateStatus('Ошибка показа фулскрин рекламы');
+            }
+        }
+
+        // Обработчики событий для кнопок
+        document.getElementById('loadVideo').addEventListener('click', loadVideoAd);
+        document.getElementById('loadFullscreen').addEventListener('click', loadFullscreenAd);
+        document.getElementById('playVideo').addEventListener('click', playNextVideo);
+        document.getElementById('playFullscreen').addEventListener('click', playNextFullscreen);
+
+        // Добавляем колбэки для отслеживания состояния рекламы
+        TMAds.addCallback("onRewardedAdLoadSuccess", () => {
+            updateStatus('Видео реклама успешно загружена');
+        });
+
+        TMAds.addCallback("onInterstitialAdLoadSuccess", () => {
+            updateStatus('Фулскрин реклама успешно загружена');
+        });
+
+        // Расширяем окно при показе фулскрин рекламы
+        TMAds.addCallback("onInterstitialAdShowSuccess", () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
+        });
+    </script>
+</body>
+</html> 
