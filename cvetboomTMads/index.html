@@ -56,6 +56,9 @@
         let fullscreenQueue = [];
         let isPlaying = false;
 
+        // Включаем режим отладки
+        TMAds.setDebugMode(true);
+
         // Инициализация TMAds
         TMAds.init('58889f9372274a220f33f68777fd0a3d');
 
@@ -67,22 +70,22 @@
         // Функция для загрузки видео рекламы
         async function loadVideoAd() {
             try {
-                await TMAds.checkRewardedAd();
-                videoQueue.push(Date.now()); // Сохраняем метку времени как идентификатор
-                updateStatus(`Видео реклама загружена. В очереди: ${videoQueue.length}`);
+                // Просто добавляем в очередь без проверки
+                videoQueue.push(Date.now());
+                updateStatus(`Видео реклама добавлена в очередь. Всего: ${videoQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка загрузки видео рекламы');
+                updateStatus('Ошибка добавления видео рекламы');
             }
         }
 
         // Функция для загрузки фулскрин рекламы
         async function loadFullscreenAd() {
             try {
-                await TMAds.checkInterstitialAd();
-                fullscreenQueue.push(Date.now()); // Сохраняем метку времени как идентификатор
-                updateStatus(`Фулскрин реклама загружена. В очереди: ${fullscreenQueue.length}`);
+                // Просто добавляем в очередь без проверки
+                fullscreenQueue.push(Date.now());
+                updateStatus(`Фулскрин реклама добавлена в очередь. Всего: ${fullscreenQueue.length}`);
             } catch (error) {
-                updateStatus('Ошибка загрузки фулскрин рекламы');
+                updateStatus('Ошибка добавления фулскрин рекламы');
             }
         }
 
@@ -97,8 +100,9 @@
                 updateStatus(`Видео показано. Осталось в очереди: ${videoQueue.length}`);
                 
                 isPlaying = false;
+                // Если в очереди еще есть видео, запускаем следующее
                 if (videoQueue.length > 0) {
-                    await loadVideoAd(); // Предзагружаем следующее видео
+                    setTimeout(playNextVideo, 1000); // Небольшая задержка перед следующим показом
                 }
             } catch (error) {
                 isPlaying = false;
@@ -117,8 +121,9 @@
                 updateStatus(`Фулскрин показан. Осталось в очереди: ${fullscreenQueue.length}`);
                 
                 isPlaying = false;
+                // Если в очереди еще есть фулскрин, запускаем следующий
                 if (fullscreenQueue.length > 0) {
-                    await loadFullscreenAd(); // Предзагружаем следующую рекламу
+                    setTimeout(playNextFullscreen, 1000); // Небольшая задержка перед следующим показом
                 }
             } catch (error) {
                 isPlaying = false;
